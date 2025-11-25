@@ -1,0 +1,54 @@
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+
+export enum SellerStatus {
+    PENDING = 'PENDING',
+    APPROVED = 'APPROVED',
+    REJECTED = 'REJECTED',
+    BLOCKED = 'BLOCKED'
+}
+
+
+@Entity('sellers')
+export class SellerTable {
+
+    @PrimaryGeneratedColumn('uuid')
+    id: string;
+
+    @Column({ unique: true })
+    email: string;
+
+    @Column()
+    password: string;
+
+    @Column()
+    fullName: string;
+
+    @Column({ unique: true })
+    phone: string;
+
+    @Column({ nullable: true })
+    shopName?: string;
+
+    @Column({ nullable: true, unique: true })
+    shopSlug?: string;
+
+    @Column({ type: 'enum', enum: SellerStatus, default: SellerStatus.PENDING })
+    status: SellerStatus;
+
+    @Column({ nullable: true })
+    rejectedReason?: string;
+
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    @BeforeInsert()
+    async hashPassword() {
+        this.password = await bcrypt.hash(this.password, 10)
+    }
+
+
+}
