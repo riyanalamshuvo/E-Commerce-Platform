@@ -10,7 +10,7 @@ export enum SellerStatus {
 
 
 @Entity('sellers')
-export class SellerTable {
+export class Seller {
 
     @PrimaryGeneratedColumn('uuid')
     id: string;

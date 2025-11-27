@@ -8,7 +8,7 @@ export class SellerRegisterDto {
     email: string;
 
     @IsMobilePhone('bn-BD')
-    phone: String;
+    phone: string;
 
     @IsString()
     @MinLength(8)
