@@ -1,4 +1,4 @@
-// src/seller/seller.controller.ts
+
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { SellerJwtGuard } from './guards/seller-jwt.guard';
 

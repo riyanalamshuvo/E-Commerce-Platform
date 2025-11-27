@@ -1,4 +1,3 @@
-// src/seller/auth/seller-auth.controller.ts
 import { Controller, Post, Body } from '@nestjs/common';
 import { SellerAuthService } from './seller-auth.service';
 import { SellerRegisterDto } from './dto/seller-register.dto';

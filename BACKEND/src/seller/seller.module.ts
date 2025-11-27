@@ -1,4 +1,3 @@
-// src/seller/seller.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Seller } from './entities/seller.entity';
