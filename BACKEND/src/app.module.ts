@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AdminModule } from './admin/admin.module';
 import { SellerModule } from './seller/seller.module';
 import { Seller } from './seller/entities/seller.entity';
-
+import { Product } from './seller/entities/product.entity';
 
 @Module({
   imports: [
@@ -22,6 +22,7 @@ import { Seller } from './seller/entities/seller.entity';
       password: process.env.DB_PASSWORD || '123456',
       database: process.env.DB_NAME || 'ecommerce_db',
 
+      entities: [Seller, Product],
       synchronize: true,
       logging: true,
       autoLoadEntities: true,

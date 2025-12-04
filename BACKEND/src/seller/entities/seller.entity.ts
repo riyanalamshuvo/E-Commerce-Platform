@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, OneToMany, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Product } from './product.entity';
 
 export enum SellerStatus {
     PENDING = 'PENDING',
@@ -50,5 +51,7 @@ export class Seller {
         this.password = await bcrypt.hash(this.password, 10)
     }
 
+    @OneToMany(() => Product, (product) => product.seller)
+    products: Product[];
 
 }

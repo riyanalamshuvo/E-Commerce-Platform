@@ -1,3 +1,4 @@
+import { Product } from './product.entity';
 export declare enum SellerStatus {
     PENDING = "PENDING",
     APPROVED = "APPROVED",
@@ -17,4 +18,5 @@ export declare class Seller {
     createdAt: Date;
     updatedAt: Date;
     hashPassword(): Promise<void>;
+    products: Product[];
 }

@@ -18,6 +18,8 @@ const seller_jwt_guard_1 = require("./guards/seller-jwt.guard");
 const active_seller_guard_1 = require("./guards/active-seller.guard");
 const seller_service_1 = require("./seller.service");
 const update_shop_dto_1 = require("./dto/update-shop.dto");
+const create_product_dto_1 = require("./dto/create-product.dto");
+const update_product_dto_1 = require("./dto/update-product.dto");
 let SellerController = class SellerController {
     sellerService;
     constructor(sellerService) {
@@ -26,8 +28,20 @@ let SellerController = class SellerController {
     getProfile(req) {
         return { message: 'Welcome Seller!', user: req.user };
     }
-    async updateShop(req, dto) {
+    updateShop(req, dto) {
         return this.sellerService.updateShop(req.user.sellerId, dto);
+    }
+    createProduct(req, dto) {
+        return this.sellerService.createProduct(req.user.sellerId, dto);
+    }
+    getMyProducts(req) {
+        return this.sellerService.getMyProducts(req.user.sellerId);
+    }
+    updateProduct(req, id, dto) {
+        return this.sellerService.updateProduct(req.user.sellerId, id, dto);
+    }
+    deleteProduct(req, id) {
+        return this.sellerService.deleteProduct(req.user.sellerId, id);
     }
 };
 exports.SellerController = SellerController;
@@ -45,8 +59,43 @@ __decorate([
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, update_shop_dto_1.UpdateShopDto]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], SellerController.prototype, "updateShop", null);
+__decorate([
+    (0, common_1.Post)('products'),
+    (0, common_1.UseGuards)(active_seller_guard_1.ActiveSellerGuard),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, create_product_dto_1.CreateProductDto]),
+    __metadata("design:returntype", void 0)
+], SellerController.prototype, "createProduct", null);
+__decorate([
+    (0, common_1.Get)('products'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SellerController.prototype, "getMyProducts", null);
+__decorate([
+    (0, common_1.Patch)('products/:id'),
+    (0, common_1.UseGuards)(active_seller_guard_1.ActiveSellerGuard),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Param)('id')),
+    __param(2, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String, update_product_dto_1.UpdateProductDto]),
+    __metadata("design:returntype", void 0)
+], SellerController.prototype, "updateProduct", null);
+__decorate([
+    (0, common_1.Delete)('products/:id'),
+    (0, common_1.UseGuards)(active_seller_guard_1.ActiveSellerGuard),
+    __param(0, (0, common_1.Request)()),
+    __param(1, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", void 0)
+], SellerController.prototype, "deleteProduct", null);
 exports.SellerController = SellerController = __decorate([
     (0, common_1.Controller)('seller'),
     (0, common_1.UseGuards)(seller_jwt_guard_1.SellerJwtGuard),

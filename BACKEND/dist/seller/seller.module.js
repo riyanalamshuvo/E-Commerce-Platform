@@ -10,6 +10,7 @@ exports.SellerModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const seller_entity_1 = require("./entities/seller.entity");
+const product_entity_1 = require("./entities/product.entity");
 const seller_service_1 = require("./seller.service");
 const seller_auth_module_1 = require("./auth/seller-auth.module");
 const seller_controller_1 = require("./seller.controller");
@@ -20,7 +21,7 @@ let SellerModule = class SellerModule {
 exports.SellerModule = SellerModule;
 exports.SellerModule = SellerModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([seller_entity_1.Seller]), seller_auth_module_1.SellerAuthModule],
+        imports: [typeorm_1.TypeOrmModule.forFeature([seller_entity_1.Seller, product_entity_1.Product]), seller_auth_module_1.SellerAuthModule],
         controllers: [seller_controller_1.SellerController],
         providers: [seller_service_1.SellerService, seller_jwt_guard_1.SellerJwtGuard, active_seller_guard_1.ActiveSellerGuard],
     })

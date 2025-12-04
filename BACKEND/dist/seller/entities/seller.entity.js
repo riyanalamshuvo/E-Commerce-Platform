@@ -45,6 +45,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Seller = exports.SellerStatus = void 0;
 const typeorm_1 = require("typeorm");
 const bcrypt = __importStar(require("bcrypt"));
+const product_entity_1 = require("./product.entity");
 var SellerStatus;
 (function (SellerStatus) {
     SellerStatus["PENDING"] = "PENDING";
@@ -67,6 +68,7 @@ let Seller = class Seller {
     async hashPassword() {
         this.password = await bcrypt.hash(this.password, 10);
     }
+    products;
 };
 exports.Seller = Seller;
 __decorate([
@@ -119,6 +121,10 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], Seller.prototype, "hashPassword", null);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => product_entity_1.Product, (product) => product.seller),
+    __metadata("design:type", Array)
+], Seller.prototype, "products", void 0);
 exports.Seller = Seller = __decorate([
     (0, typeorm_1.Entity)('sellers')
 ], Seller);
