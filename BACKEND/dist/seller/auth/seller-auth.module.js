@@ -28,6 +28,7 @@ exports.SellerAuthModule = SellerAuthModule = __decorate([
         ],
         controllers: [seller_auth_controller_1.SellerAuthController],
         providers: [seller_auth_service_1.SellerAuthService, seller_jwt_strategy_1.SellerJwtStrategy],
+        exports: [seller_auth_service_1.SellerAuthService],
     })
 ], SellerAuthModule);
 //# sourceMappingURL=seller-auth.module.js.map

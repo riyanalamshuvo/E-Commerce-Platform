@@ -16,5 +16,6 @@ import { Seller } from '../entities/seller.entity';
   ],
   controllers: [SellerAuthController],
   providers: [SellerAuthService, SellerJwtStrategy],
+  exports: [SellerAuthService],
 })
 export class SellerAuthModule {}

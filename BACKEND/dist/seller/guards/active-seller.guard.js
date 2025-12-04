@@ -12,28 +12,31 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.SellerService = void 0;
+exports.ActiveSellerGuard = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const seller_entity_1 = require("./entities/seller.entity");
-let SellerService = class SellerService {
+const seller_entity_1 = require("../entities/seller.entity");
+const seller_entity_2 = require("../entities/seller.entity");
+let ActiveSellerGuard = class ActiveSellerGuard {
     sellerRepo;
     constructor(sellerRepo) {
         this.sellerRepo = sellerRepo;
     }
-    async updateShop(sellerId, dto) {
+    async canActivate(context) {
+        const request = context.switchToHttp().getRequest();
+        const sellerId = request.user.sellerId;
         const seller = await this.sellerRepo.findOne({ where: { id: sellerId } });
-        if (!seller)
-            throw new Error('Seller not found');
-        Object.assign(seller, dto);
-        return this.sellerRepo.save(seller);
+        if (!seller || seller.status !== seller_entity_2.SellerStatus.APPROVED) {
+            throw new common_1.ForbiddenException('Your shop is not approved yet. Please wait for admin approval.');
+        }
+        return true;
     }
 };
-exports.SellerService = SellerService;
-exports.SellerService = SellerService = __decorate([
+exports.ActiveSellerGuard = ActiveSellerGuard;
+exports.ActiveSellerGuard = ActiveSellerGuard = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(seller_entity_1.Seller)),
     __metadata("design:paramtypes", [typeorm_2.Repository])
-], SellerService);
-//# sourceMappingURL=seller.service.js.map
+], ActiveSellerGuard);
+//# sourceMappingURL=active-seller.guard.js.map
