@@ -7,7 +7,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 
 @Controller('seller')
-//guards
+
 @UseGuards(SellerJwtGuard)
 export class SellerController {
   constructor(private sellerService: SellerService) {}
