@@ -6,6 +6,8 @@ import { Product } from './entities/product.entity';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Wallet } from './entities/wallet.entity';
+
 
 @Injectable()
 export class SellerService {
@@ -14,6 +16,8 @@ export class SellerService {
     private sellerRepo: Repository<Seller>,
     @InjectRepository(Product)
     private productRepo: Repository<Product>,
+    @InjectRepository(Wallet)
+private walletRepo: Repository<Wallet>,
   ) {}
 
   // Shop Update
@@ -54,4 +58,17 @@ export class SellerService {
     await this.productRepo.remove(product);
     return { message: 'Product deleted successfully' };
   }
+
+
+  async getWallet(sellerId: string) {
+  let wallet = await this.walletRepo.findOne({ where: { sellerId } });
+  
+  if (!wallet) {
+    // প্রথমবার ওয়ালেট তৈরি করবে
+    wallet = this.walletRepo.create({ sellerId, balance: 0 });
+    return this.walletRepo.save(wallet);
+  }
+  
+  return wallet;
+}
 }

@@ -1,6 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, OneToMany, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn,OneToOne, OneToMany, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Product } from './product.entity';
+import { Wallet } from './wallet.entity';
 
 export enum SellerStatus {
     PENDING = 'PENDING',
@@ -53,5 +54,9 @@ export class Seller {
 
     @OneToMany(() => Product, (product) => product.seller)
     products: Product[];
+
+
+    @OneToOne(() => Wallet, (wallet) => wallet.seller)
+wallet: Wallet;
 
 }

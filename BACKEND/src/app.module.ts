@@ -6,6 +6,7 @@ import { SellerModule } from './seller/seller.module';
 import { Seller } from './seller/entities/seller.entity';
 import { Product } from './seller/entities/product.entity';
 
+
 @Module({
   imports: [
 

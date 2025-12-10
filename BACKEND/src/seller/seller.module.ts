@@ -8,9 +8,13 @@ import { SellerAuthModule } from './auth/seller-auth.module';
 import { SellerController } from './seller.controller';
 import { SellerJwtGuard } from './guards/seller-jwt.guard';
 import {ActiveSellerGuard} from './guards/active-seller.guard'
+import { Wallet } from './entities/wallet.entity';
+
+
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Seller, Product]), SellerAuthModule],
+  imports: [TypeOrmModule.forFeature([Seller, Product, Wallet]), SellerAuthModule],
   controllers: [SellerController],
-  providers: [SellerService, SellerJwtGuard, ActiveSellerGuard],  // ← ActiveSellerGuard যোগ করো
-})
+  providers: [SellerService, SellerJwtGuard, ActiveSellerGuard], 
+  })
 export class SellerModule {}
