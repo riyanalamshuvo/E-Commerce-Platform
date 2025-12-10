@@ -1,4 +1,5 @@
 import { Product } from './product.entity';
+import { Wallet } from './wallet.entity';
 export declare enum SellerStatus {
     PENDING = "PENDING",
     APPROVED = "APPROVED",
@@ -19,4 +20,5 @@ export declare class Seller {
     updatedAt: Date;
     hashPassword(): Promise<void>;
     products: Product[];
+    wallet: Wallet;
 }

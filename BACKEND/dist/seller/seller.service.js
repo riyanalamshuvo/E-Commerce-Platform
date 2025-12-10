@@ -18,12 +18,18 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const seller_entity_1 = require("./entities/seller.entity");
 const product_entity_1 = require("./entities/product.entity");
+const wallet_entity_1 = require("./entities/wallet.entity");
+const mail_service_1 = require("./mail/mail.service");
 let SellerService = class SellerService {
     sellerRepo;
     productRepo;
-    constructor(sellerRepo, productRepo) {
+    walletRepo;
+    mailService;
+    constructor(sellerRepo, productRepo, walletRepo, mailService) {
         this.sellerRepo = sellerRepo;
         this.productRepo = productRepo;
+        this.walletRepo = walletRepo;
+        this.mailService = mailService;
     }
     async updateShop(sellerId, dto) {
         const seller = await this.sellerRepo.findOne({ where: { id: sellerId } });
@@ -60,13 +66,50 @@ let SellerService = class SellerService {
         await this.productRepo.remove(product);
         return { message: 'Product deleted successfully' };
     }
+    async getWallet(sellerId) {
+        let wallet = await this.walletRepo.findOne({ where: { sellerId } });
+        if (!wallet) {
+            wallet = this.walletRepo.create({ sellerId, balance: 0 });
+            return this.walletRepo.save(wallet);
+        }
+        return wallet;
+    }
+    async approveSeller(sellerId) {
+        const seller = await this.sellerRepo.findOne({ where: { id: sellerId } });
+        if (!seller)
+            throw new common_1.NotFoundException('Seller not found');
+        seller.status = seller_entity_1.SellerStatus.APPROVED;
+        await this.sellerRepo.save(seller);
+        await this.mailService.sendApprovalMail(seller.email, seller.fullName, seller.shopName || 'Your Shop');
+        return { message: 'Seller approved & email sent' };
+    }
+    async rejectSeller(sellerId, reason) {
+        const seller = await this.sellerRepo.findOne({ where: { id: sellerId } });
+        if (!seller)
+            throw new common_1.NotFoundException('Seller not found');
+        seller.status = seller_entity_1.SellerStatus.REJECTED;
+        seller.rejectedReason = reason;
+        await this.sellerRepo.save(seller);
+        await this.mailService.sendRejectionMail(seller.email, seller.fullName, reason);
+        return { message: 'Seller rejected & email sent' };
+    }
+    async getPendingSellers() {
+        return this.sellerRepo.find({
+            where: { status: seller_entity_1.SellerStatus.PENDING },
+            select: ['id', 'fullName', 'email', 'phone', 'shopName', 'createdAt'],
+            order: { createdAt: 'DESC' },
+        });
+    }
 };
 exports.SellerService = SellerService;
 exports.SellerService = SellerService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(seller_entity_1.Seller)),
     __param(1, (0, typeorm_1.InjectRepository)(product_entity_1.Product)),
+    __param(2, (0, typeorm_1.InjectRepository)(wallet_entity_1.Wallet)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        typeorm_2.Repository])
+        typeorm_2.Repository,
+        typeorm_2.Repository,
+        mail_service_1.MailService])
 ], SellerService);
 //# sourceMappingURL=seller.service.js.map

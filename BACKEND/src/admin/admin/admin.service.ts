@@ -8,6 +8,8 @@ import { User } from '../user/user.entity';
 import { CreateAdminDto } from './dto/create-admin.dto';
 import * as bcrypt from 'bcrypt';
 import { UpdateAdminDto } from './dto/update-admin.dto';
+import { Seller, SellerStatus } from '../../seller/entities/seller.entity';
+import { MailService } from '../../seller/mail/mail.service';
 
 @Injectable()
 export class AdminService {
@@ -15,7 +17,12 @@ export class AdminService {
     @InjectRepository(Admin) private adminRepo: Repository<Admin>,
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(AdminProfile) private profileRepo: Repository<AdminProfile>,
+    
       // mailer removed
+      //ymn
+      @InjectRepository(Seller)
+    private sellerRepo: Repository<Seller>,
+    private mailService: MailService,
   ) {}
 
   async create(dto: CreateAdminDto) {
@@ -137,4 +144,37 @@ export class AdminService {
   async sendEmail(email: string) {
     // mailer code removed
   }
+
+
+  //ymn
+  async getPendingSellers() {
+    return this.sellerRepo.find({
+      where: { status: SellerStatus.PENDING },
+      select: ['id', 'fullName', 'email', 'phone', 'shopName', 'createdAt'],
+    });
+  }
+
+  async approveSeller(id: string) {
+  const seller = await this.sellerRepo.findOne({ where: { id } });
+  if (!seller) throw new NotFoundException('Seller not found');
+
+  seller.status = SellerStatus.APPROVED;   // ← এভাবে লিখো
+  await this.sellerRepo.save(seller);
+
+  await this.mailService.sendApprovalMail(seller.email, seller.fullName, seller.shopName || 'Your Shop');
+  return { message: 'Seller approved & email sent' };
 }
+
+async rejectSeller(id: string, reason?: string) {
+  const seller = await this.sellerRepo.findOne({ where: { id } });
+  if (!seller) throw new NotFoundException('Seller not found');
+
+  seller.status = SellerStatus.REJECTED;   // ← এভাবে লিখো
+  seller.rejectedReason = reason || 'No reason provided';
+  await this.sellerRepo.save(seller);
+
+  await this.mailService.sendRejectionMail(seller.email, seller.fullName, reason || 'No reason');
+  return { message: 'Seller rejected & email sent' };
+}
+}
+

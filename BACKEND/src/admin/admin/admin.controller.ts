@@ -6,6 +6,7 @@ import { ParseIntPipe } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from '../shared/roles.decorator';
 import { RolesGuard } from '../shared/roles.guard';
+import { AdminJwtGuard } from '../guards/admin-jwt.guard';
 
 @Controller('admin')
 export class AdminController {
@@ -87,4 +88,25 @@ export class AdminController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.adminService.remove(id);
   }
+
+//ymn
+
+@Get('sellers/pending')
+  getPendingSellers() {
+    return this.adminService.getPendingSellers();
+  }
+
+  // ২. Approve
+  @Patch('sellers/:id/approve')
+  approveSeller(@Param('id') id: string) {
+    return this.adminService.approveSeller(id);
+  }
+
+  // ৩. Reject
+  @Patch('sellers/:id/reject')
+  rejectSeller(@Param('id') id: string, @Body('reason') reason?: string) {
+    return this.adminService.rejectSeller(id, reason);
+  }
+
+
 }

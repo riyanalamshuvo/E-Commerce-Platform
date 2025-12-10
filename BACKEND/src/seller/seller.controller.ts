@@ -45,4 +45,27 @@ export class SellerController {
   deleteProduct(@Request() req, @Param('id') id: string) {
     return this.sellerService.deleteProduct(req.user.sellerId, id);
   }
+
+@Get('wallet')
+getWallet(@Request() req) {
+  return this.sellerService.getWallet(req.user.sellerId);
+}
+
+//mailer
+
+@Get('pending')
+async getPendingSellers() {
+  return this.sellerService.getPendingSellers();
+}
+
+@Patch('approve/:id')
+async approveSeller(@Param('id') id: string) {
+  return this.sellerService.approveSeller(id);
+}
+
+@Patch('reject/:id')
+async rejectSeller(@Param('id') id: string, @Body('reason') reason?: string) {
+  return this.sellerService.rejectSeller(id, reason || 'No reason provided');
+}
+
 }

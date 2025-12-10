@@ -16,4 +16,12 @@ export declare class SellerController {
     deleteProduct(req: any, id: string): Promise<{
         message: string;
     }>;
+    getWallet(req: any): Promise<import("./entities/wallet.entity").Wallet>;
+    getPendingSellers(): Promise<import("./entities/seller.entity").Seller[]>;
+    approveSeller(id: string): Promise<{
+        message: string;
+    }>;
+    rejectSeller(id: string, reason?: string): Promise<{
+        message: string;
+    }>;
 }

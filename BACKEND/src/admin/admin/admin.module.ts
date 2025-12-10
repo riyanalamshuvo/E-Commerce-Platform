@@ -8,9 +8,12 @@ import { AdminProfile } from './admin-profile.entity';
 
 import { AuthModule } from '../auth/auth.module';
 
+import { Seller } from '../../seller/entities/seller.entity';   // ← যোগ করো
+import { MailService } from '../../seller/mail/mail.service';
+
 @Module({
-  imports: [TypeOrmModule.forFeature([Admin, User, AdminProfile]), AuthModule],
+  imports: [TypeOrmModule.forFeature([Admin, User, AdminProfile, Seller]), AuthModule],
   controllers: [AdminController],
-  providers: [AdminService],
+  providers: [AdminService, MailService],
 })
 export class AdminModule {}

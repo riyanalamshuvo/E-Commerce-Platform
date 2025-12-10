@@ -46,6 +46,7 @@ exports.Seller = exports.SellerStatus = void 0;
 const typeorm_1 = require("typeorm");
 const bcrypt = __importStar(require("bcrypt"));
 const product_entity_1 = require("./product.entity");
+const wallet_entity_1 = require("./wallet.entity");
 var SellerStatus;
 (function (SellerStatus) {
     SellerStatus["PENDING"] = "PENDING";
@@ -69,6 +70,7 @@ let Seller = class Seller {
         this.password = await bcrypt.hash(this.password, 10);
     }
     products;
+    wallet;
 };
 exports.Seller = Seller;
 __decorate([
@@ -125,6 +127,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => product_entity_1.Product, (product) => product.seller),
     __metadata("design:type", Array)
 ], Seller.prototype, "products", void 0);
+__decorate([
+    (0, typeorm_1.OneToOne)(() => wallet_entity_1.Wallet, (wallet) => wallet.seller),
+    __metadata("design:type", wallet_entity_1.Wallet)
+], Seller.prototype, "wallet", void 0);
 exports.Seller = Seller = __decorate([
     (0, typeorm_1.Entity)('sellers')
 ], Seller);

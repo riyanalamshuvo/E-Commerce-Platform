@@ -43,6 +43,18 @@ let SellerController = class SellerController {
     deleteProduct(req, id) {
         return this.sellerService.deleteProduct(req.user.sellerId, id);
     }
+    getWallet(req) {
+        return this.sellerService.getWallet(req.user.sellerId);
+    }
+    async getPendingSellers() {
+        return this.sellerService.getPendingSellers();
+    }
+    async approveSeller(id) {
+        return this.sellerService.approveSeller(id);
+    }
+    async rejectSeller(id, reason) {
+        return this.sellerService.rejectSeller(id, reason || 'No reason provided');
+    }
 };
 exports.SellerController = SellerController;
 __decorate([
@@ -96,6 +108,34 @@ __decorate([
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", void 0)
 ], SellerController.prototype, "deleteProduct", null);
+__decorate([
+    (0, common_1.Get)('wallet'),
+    __param(0, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SellerController.prototype, "getWallet", null);
+__decorate([
+    (0, common_1.Get)('pending'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], SellerController.prototype, "getPendingSellers", null);
+__decorate([
+    (0, common_1.Patch)('approve/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], SellerController.prototype, "approveSeller", null);
+__decorate([
+    (0, common_1.Patch)('reject/:id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)('reason')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", Promise)
+], SellerController.prototype, "rejectSeller", null);
 exports.SellerController = SellerController = __decorate([
     (0, common_1.Controller)('seller'),
     (0, common_1.UseGuards)(seller_jwt_guard_1.SellerJwtGuard),

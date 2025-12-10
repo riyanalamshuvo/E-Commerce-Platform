@@ -10,10 +10,10 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const config_1 = require("@nestjs/config");
-const admin_module_1 = require("./admin/admin.module");
 const seller_module_1 = require("./seller/seller.module");
 const seller_entity_1 = require("./seller/entities/seller.entity");
 const product_entity_1 = require("./seller/entities/product.entity");
+const wallet_entity_1 = require("./seller/entities/wallet.entity");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -30,12 +30,11 @@ exports.AppModule = AppModule = __decorate([
                 username: process.env.DB_USERNAME || 'postgres',
                 password: process.env.DB_PASSWORD || '123456',
                 database: process.env.DB_NAME || 'ecommerce_db',
-                entities: [seller_entity_1.Seller, product_entity_1.Product],
+                entities: [seller_entity_1.Seller, product_entity_1.Product, wallet_entity_1.Wallet],
                 synchronize: true,
                 logging: true,
                 autoLoadEntities: true,
             }),
-            admin_module_1.AdminModule,
             seller_module_1.SellerModule,
         ],
     })

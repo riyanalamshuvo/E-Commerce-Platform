@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { AdminModule } from './admin/admin.module';
+//import { AdminModule } from './admin/admin.module';
 import { SellerModule } from './seller/seller.module';
 import { Seller } from './seller/entities/seller.entity';
 import { Product } from './seller/entities/product.entity';
-
+import { Wallet } from './seller/entities/wallet.entity';
 
 @Module({
   imports: [
@@ -23,14 +23,14 @@ import { Product } from './seller/entities/product.entity';
       password: process.env.DB_PASSWORD || '123456',
       database: process.env.DB_NAME || 'ecommerce_db',
 
-      entities: [Seller, Product],
+      entities: [Seller, Product, Wallet],
       synchronize: true,
       logging: true,
       autoLoadEntities: true,
     }),
 
 
-    AdminModule,
+    //AdminModule,
     SellerModule,
   ],
 })

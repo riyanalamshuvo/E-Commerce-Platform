@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Seller } from './entities/seller.entity';
+import { Seller, SellerStatus } from './entities/seller.entity';
 import { Product } from './entities/product.entity';
 import { UpdateShopDto } from './dto/update-shop.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Wallet } from './entities/wallet.entity';
-
+import { MailService } from './mail/mail.service';
 
 @Injectable()
 export class SellerService {
@@ -18,6 +18,7 @@ export class SellerService {
     private productRepo: Repository<Product>,
     @InjectRepository(Wallet)
 private walletRepo: Repository<Wallet>,
+private mailService: MailService,
   ) {}
 
   // Shop Update
@@ -71,4 +72,39 @@ private walletRepo: Repository<Wallet>,
   
   return wallet;
 }
+
+//mailer
+
+async approveSeller(sellerId: string) {
+  const seller = await this.sellerRepo.findOne({ where: { id: sellerId } });
+  if (!seller) throw new NotFoundException('Seller not found');
+
+  seller.status = SellerStatus.APPROVED;
+  await this.sellerRepo.save(seller);
+
+  await this.mailService.sendApprovalMail(seller.email, seller.fullName, seller.shopName || 'Your Shop');
+  return { message: 'Seller approved & email sent' };
+}
+
+async rejectSeller(sellerId: string, reason: string) {
+  const seller = await this.sellerRepo.findOne({ where: { id: sellerId } });
+  if (!seller) throw new NotFoundException('Seller not found');
+
+ seller.status = SellerStatus.REJECTED;
+  seller.rejectedReason = reason;
+  await this.sellerRepo.save(seller);
+
+  await this.mailService.sendRejectionMail(seller.email, seller.fullName, reason);
+  return { message: 'Seller rejected & email sent' };
+}
+
+async getPendingSellers() {
+    return this.sellerRepo.find({
+      where: { status: SellerStatus.PENDING },
+      select: ['id', 'fullName', 'email', 'phone', 'shopName', 'createdAt'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+
 }
